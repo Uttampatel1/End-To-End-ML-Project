@@ -1,13 +1,12 @@
 import sys
-import logging
+from src.logger import logging
 
 def error_message_detail(error,error_detail:sys):
-
+    
     _,_,exc_tb = error_detail.exc_info()
     filename = exc_tb.tb_frame.f_code.co_filename
     line_number = exc_tb.tb_lineno
     error_message = "Error occured in file: [{0}] , line number: [{1}] , Error: [{2}]".format(filename,line_number,str(error))
-
     return error_message
 
 class CustomException(Exception):
@@ -24,3 +23,10 @@ class CustomException(Exception):
 #         raise CustomException("This is a test error",sys)
 #     except CustomException as error:
 #         logging.error(error)
+
+if __name__ == "__main__":
+    try:
+        a = 1/0
+    except Exception as error:
+        logging.info("ZeroDivisionError: division by zero")
+        raise CustomException(error,sys)
