@@ -1,7 +1,7 @@
-from flask import Flask,request,render_template , url_for
+from flask import Flask,request,render_template , url_for , redirect , jsonify
 import numpy as np
 import pandas as pd
-
+import json
 from sklearn.preprocessing import StandardScaler
 from src.pipeline.predict_pipeline import CustomData,PredictPipeline
 
@@ -14,6 +14,24 @@ app=application
 @app.route('/')
 def index():
     return render_template('index.html') 
+
+@app.route('/predictapi', methods=['POST'])
+def predict_api():
+    if not request.json:
+        return jsonify({'error': 'Invalid input format'})
+
+    data = request.json
+
+    # Convert input data to CustomData object
+    custom_data = CustomData(**data)
+
+    # Predict using the custom data
+    predict_pipeline = PredictPipeline()
+    result = predict_pipeline.predict(custom_data.get_data_as_data_frame())
+
+    # Return the result as a JSON response
+    return jsonify({'result': result[0]})
+
 
 @app.route('/predictdata',methods=['GET','POST'])
 def predict_datapoint():
