@@ -33,6 +33,7 @@ def predict_api():
     return jsonify({'result': result[0]})
 
 
+
 @app.route('/predictdata',methods=['GET','POST'])
 def predict_datapoint():
     if request.method=='GET':
